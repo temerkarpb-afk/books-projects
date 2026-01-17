@@ -168,28 +168,35 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
 #addBookBtn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
 #addBookBtn:hover { background: var(--primary-hover); }
 
-/* --- ФУТЕР (ИДЕАЛЬНОЕ ВЫРАВНИВАНИЕ) --- */
+/* --- ФУТЕР: ЖЕСТКОЕ ВЫРАВНИВАНИЕ --- */
 .main-footer { 
     background: #0f172a; 
     color: #94a3b8; 
-    padding: 60px 0 30px; 
+    padding: 70px 0 0; /* Увеличил верхний отступ для воздуха */
     border-top: 4px solid var(--primary); 
     margin-top: 80px; 
 }
 
 .footer-grid { 
     display: grid; 
-    /* Распределяем: 1.5 части под бренд, по 1 части под колонки и 1 часть под соцсети */
-    grid-template-columns: 1.5fr 1fr 1fr 1fr; 
-    gap: 30px; 
-    align-items: start; /* Выравнивает все колонки по верхней линии */
+    /* Создаем 4 равные колонки для идеального баланса */
+    grid-template-columns: 1.2fr 1fr 1fr 1fr; 
+    gap: 20px; 
+    align-items: start; /* Все заголовки примагничены к верху */
 }
 
-/* Логотип теперь не задирается выше текста */
+/* Блок бренда (Логотип + текст) */
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 .footer-brand .logo { 
     color: white; 
-    margin-bottom: 20px; 
+    margin: 0; /* Убрал лишний отступ */
     font-size: 26px; 
+    height: 40px; /* Фиксируем высоту для выравнивания с текстом рядом */
     display: flex;
     align-items: center;
 }
@@ -197,44 +204,55 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
 .footer-brand p { 
     font-size: 14px; 
     line-height: 1.6; 
-    max-width: 280px; 
-    margin-bottom: 25px;
+    max-width: 280px;
 }
 
-/* Заголовки на одной линии */
+/* Секции Навигации и Поддержки */
+.footer-nav, .footer-contact {
+    display: flex;
+    flex-direction: column;
+}
+
 .footer-nav h4, .footer-contact h4 {
     color: #fff;
     font-size: 18px;
     font-weight: 700;
-    margin-top: 8px; /* Небольшая компенсация, чтобы текст был вровень с лого */
-    margin-bottom: 25px;
+    margin: 0 0 25px 0; /* Обнулил верхний отступ, чтобы встало вровень с лого */
+    height: 40px; /* Такая же высота, как у логотипа, для симметрии */
+    display: flex;
+    align-items: center;
     position: relative;
 }
 
-/* Декоративная полоска под заголовком */
+/* Полоска под заголовком */
 .footer-nav h4::after, .footer-contact h4::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: -8px;
+    bottom: 0;
     width: 35px;
     height: 2px;
     background: var(--primary);
 }
 
-.footer-nav ul { list-style: none; }
-.footer-nav ul li { margin-bottom: 12px; }
+.footer-nav ul { 
+    list-style: none; 
+    padding-top: 5px;
+}
+
+.footer-nav ul li { margin-bottom: 15px; }
 .footer-nav ul li a { 
     color: #94a3b8; 
     text-decoration: none; 
     font-size: 14px; 
     display: flex; 
     align-items: center; 
-    gap: 8px; 
-    transition: 0.3s;
+    gap: 10px; 
 }
 
-.footer-nav ul li a:hover { color: var(--primary); transform: translateX(5px); }
+.footer-contact div {
+    padding-top: 5px;
+}
 
 .footer-contact p { 
     display: flex; 
@@ -242,46 +260,57 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     gap: 12px; 
     margin-bottom: 15px; 
     font-size: 14px;
-    color: #94a3b8;
 }
 
-.footer-contact i { color: var(--primary); font-size: 18px; }
+.footer-contact i { 
+    color: var(--primary); 
+    font-size: 18px; 
+    width: 20px; /* Фиксированная ширина иконок, чтобы текст не гулял */
+}
 
-/* Соцсети в отдельной колонке или под логотипом */
+/* Соцсети теперь тоже выровнены */
+.footer-social-col h4 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 25px 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
 .socials { 
     display: flex; 
     gap: 12px; 
+    padding-top: 5px;
 }
 
 .socials a { 
-    width: 38px; 
-    height: 38px; 
+    width: 40px; 
+    height: 40px; 
     background: rgba(255,255,255,0.05); 
     color: white; 
-    border-radius: 8px; 
+    border-radius: 10px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-size: 18px; 
+    font-size: 20px; 
     transition: 0.3s; 
 }
 
 .socials a:hover { 
     background: var(--primary); 
     transform: translateY(-3px); 
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3); 
 }
 
-/* Копирайт на всю ширину */
 .footer-bottom {
-    margin-top: 50px;
-    padding-top: 25px;
+    margin-top: 60px;
+    padding: 30px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
     font-size: 13px;
     color: #475569;
 }
-
 /* КНОПКИ ЗАКРЫТИЯ */
 .close-modal, .close-test, .close-admin { 
     background: #f1f5f9; border: none; width: 45px; height: 45px; border-radius: 50%; 
@@ -319,4 +348,5 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     .footer-nav h4::after, .footer-contact h4::after { left: 50%; transform: translateX(-50%); }
     .socials { justify-content: center; }
 }
+
 
