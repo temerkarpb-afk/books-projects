@@ -1,37 +1,37 @@
-// База данных учебников
 const bookMap = {
     'math-1': 'img3.webp', 'math-2': 'img4.webp', 'math-3': 'img5.webp', 'math-4': 'img6.webp', 'math-5': 'img7.webp', 'math-6': 'img8.webp', 'math-7': 'img9.webp', 'math-8': 'img10.webp', 'math-9': 'img11.webp', 'math-10': 'img12.webp', 'math-11': 'img13.webp',
     'rus-1': 'img14.webp', 'rus-2': 'img15.webp', 'rus-3': 'img16.webp', 'rus-4': 'img17.webp', 'rus-5': 'img18.webp', 'rus-6': 'img19.webp', 'rus-7': 'img20.webp', 'rus-8': 'img21.webp', 'rus-9': 'img22.webp', 'rus-10': 'img23.webp', 'rus-11': 'img24.webp',
     'eng-1': 'img25.webp', 'eng-2': 'img26.webp', 'eng-3': 'img27.webp', 'eng-4': 'img28.webp', 'eng-5': 'img29.webp', 'eng-6': 'img30.webp', 'eng-7': 'img31.webp', 'eng-8': 'img32.webp', 'eng-9': 'img33.webp', 'eng-10': 'img34.webp', 'eng-11': 'img35.webp'
 };
 
-// Расширенный список вопросов
-const QUESTIONS = [
-    { q: "Найдите значение выражения: 12 + 8 × 2", opts: ["40", "28", "32"], a: "28" },
-    { q: "В каком слове допущена ошибка?", opts: ["Молоко", "Солнце", "Здесь"], a: "Молоко" }, // (Все верно, это ловушка, но для примера ставим молоко)
-    { q: "Как на английском будет 'Библиотека'?", opts: ["Bookstore", "Library", "Office"], a: "Library" },
-    { q: "7 в квадрате равно...", opts: ["14", "49", "56"], a: "49" }
+const INITIAL_QUESTIONS = [
+    { q: "12 + 8 * 2 равно...", opts: ["40", "28", "32"], a: "28" },
+    { q: "Как переводится 'Library'?", opts: ["Школа", "Библиотека", "Магазин"], a: "Библиотека" },
+    { q: "Квадратный корень из 144", opts: ["12", "14", "16"], a: "12" }
 ];
 
 let isLoggedIn = false;
 let extraBooks = JSON.parse(localStorage.getItem('addedBooks')) || [];
+let dynamicTests = JSON.parse(localStorage.getItem('customTests')) || INITIAL_QUESTIONS;
 
-// 1. Выбор учебника
+// Функция открытия учебника
+window.openBook = (title, img) => {
+    const viewer = document.getElementById('book-display');
+    document.getElementById('book-image').src = img;
+    document.getElementById('current-class-title').textContent = title;
+    viewer.style.display = 'block';
+    viewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+// Базовые кнопки
 document.querySelectorAll('.class-selector button').forEach(btn => {
-    btn.onclick = (e) => {
-        e.stopPropagation();
+    btn.onclick = () => {
         const id = btn.id;
-        const viewer = document.getElementById('book-display');
-        if (bookMap[id]) {
-            document.getElementById('book-image').src = bookMap[id];
-            document.getElementById('current-class-title').textContent = btn.dataset.class;
-            viewer.style.display = 'block';
-            viewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        if (bookMap[id]) openBook(btn.dataset.class, bookMap[id]);
     };
 });
 
-// 2. Поиск
+// Поиск
 document.getElementById('searchInput').oninput = function() {
     let val = this.value.toLowerCase().trim();
     document.querySelectorAll('.subject-card').forEach(card => {
@@ -40,7 +40,7 @@ document.getElementById('searchInput').oninput = function() {
     });
 };
 
-// 3. Авторизация
+// Авторизация
 const loginModal = document.getElementById('loginModal');
 document.getElementById('loginTrigger').onclick = () => {
     if (!isLoggedIn) loginModal.style.display = 'flex';
@@ -53,121 +53,124 @@ document.getElementById('loginTrigger').onclick = () => {
 
 document.getElementById('loginForm').onsubmit = (e) => {
     e.preventDefault();
-    const u = document.getElementById('username').value;
-    const p = document.getElementById('password').value;
-    if (u === 'admin' && p === '123') {
+    if (document.getElementById('username').value === 'admin' && document.getElementById('password').value === '123') {
         isLoggedIn = true;
         document.getElementById('loginTrigger').innerHTML = "<i class='bx bx-log-out-circle'></i> <span>Выйти</span>";
         loginModal.style.display = 'none';
         document.getElementById('loginForm').reset();
     } else {
-        document.getElementById('errorMessage').textContent = 'Неверный логин или пароль!';
+        document.getElementById('errorMessage').textContent = 'Ошибка входа';
     }
 };
 
-// 4. ТЕСТ (Дизайн и функционал)
+// Тесты
 document.getElementById('openTestModal').onclick = () => {
     document.getElementById('testModal').style.display = 'flex';
     const container = document.getElementById('testContainer');
-    container.innerHTML = QUESTIONS.map((q, i) => `
+    container.innerHTML = dynamicTests.map((q, i) => `
         <div class="test-item">
-            <p style="font-weight:700; margin-bottom:12px; color:#1e293b;">${i+1}. ${q.q}</p>
-            <div class="test-options">
-                ${q.opts.map(o => `
-                    <label>
-                        <input type="radio" name="q${i}" value="${o}">
-                        <span>${o}</span>
-                    </label>
-                `).join('')}
-            </div>
+            <p>${i+1}. ${q.q}</p>
+            ${q.opts.map(o => `<label style="display:block; margin:8px 0; cursor:pointer;"><input type="radio" name="q${i}" value="${o}"> ${o}</label>`).join('')}
         </div>
     `).join('');
 };
 
 document.getElementById('submitTest').onclick = () => {
     let score = 0;
-    QUESTIONS.forEach((q, i) => {
+    dynamicTests.forEach((q, i) => {
         const sel = document.querySelector(`input[name="q${i}"]:checked`);
         if (sel && sel.value === q.a) score++;
     });
-    
-    const container = document.getElementById('testContainer');
-    container.innerHTML = `
-        <div style="text-align:center; padding:40px;">
-            <i class='bx bxs-badge-check' style="font-size:80px; color:var(--primary);"></i>
-            <h2 style="margin-top:20px;">Тест завершен!</h2>
-            <p style="font-size:18px; margin:10px 0;">Ваш результат: <strong>${score} из ${QUESTIONS.length}</strong></p>
-            <button onclick="location.reload()" class="btn-primary-lg" style="width:200px; font-size:14px;">Закрыть</button>
-        </div>
-    `;
-    document.getElementById('submitTest').style.display = 'none';
+    alert(`Результат: ${score} из ${dynamicTests.length}`);
+    document.getElementById('testModal').style.display = 'none';
 };
 
-// 5. Админка
+// Админка
 const adminPanel = document.getElementById('adminPanel');
 document.getElementById('adminBurger').onclick = () => {
     if (isLoggedIn) {
         adminPanel.classList.toggle('active');
         renderAdminList();
-    } else alert('Доступ закрыт. Войдите через кнопку «Войти»');
+        updateStats();
+    } else alert('Войдите как админ!');
 };
 
+function updateStats() {
+    if(document.getElementById('statBooks')) document.getElementById('statBooks').textContent = extraBooks.length + 33;
+    if(document.getElementById('statTests')) document.getElementById('statTests').textContent = dynamicTests.length;
+}
+
+// Добавление книги
 document.getElementById('addBookBtn').onclick = () => {
     const name = document.getElementById('bookName').value;
     const imgUrl = document.getElementById('bookImg').value;
+    const subject = document.getElementById('bookSubject').value;
+
     if (name && imgUrl) {
-        extraBooks.push({ name, imgUrl, id: Date.now() });
+        extraBooks.push({ name, imgUrl, subject, id: Date.now() });
         localStorage.setItem('addedBooks', JSON.stringify(extraBooks));
         document.getElementById('bookName').value = '';
         document.getElementById('bookImg').value = '';
         renderAdminList();
-        renderExtraBooks();
+        renderInPlace();
+        updateStats();
     }
 };
 
-function renderAdminList() {
-    document.getElementById('bookList').innerHTML = extraBooks.map(book => `
-        <li style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #eee;">
-            <span style="font-size:14px; font-weight:600;">${book.name}</span>
-            <button onclick="deleteBook(${book.id})" style="color:var(--error); border:none; background:none; cursor:pointer; font-size:20px;"><i class='bx bx-trash'></i></button>
-        </li>
-    `).join('');
+// Добавление вопроса
+document.getElementById('addTestBtn').onclick = () => {
+    const q = document.getElementById('testQ').value;
+    const a = document.getElementById('testA').value;
+    const w1 = document.getElementById('testW1').value;
+    const w2 = document.getElementById('testW2').value;
+
+    if (q && a && w1 && w2) {
+        const opts = [a, w1, w2, "Вариант не указан"].sort(() => Math.random() - 0.5);
+        dynamicTests.push({ q, opts, a });
+        localStorage.setItem('customTests', JSON.stringify(dynamicTests));
+        document.getElementById('testQ').value = '';
+        document.getElementById('testA').value = '';
+        document.getElementById('testW1').value = '';
+        document.getElementById('testW2').value = '';
+        updateStats();
+        alert("Вопрос добавлен!");
+    }
+};
+
+// Отрисовка в сетках (Математика, Русский, Английский, Доп)
+function renderInPlace() {
+    document.querySelectorAll('.extra-btn').forEach(b => b.remove());
+
+    extraBooks.forEach(book => {
+        const container = document.getElementById(`${book.subject}-container`);
+        if (container) {
+            const btn = document.createElement('button');
+            btn.className = 'extra-btn';
+            btn.innerHTML = `<i class='bx bx-book-add'></i>`;
+            btn.title = book.name;
+            btn.onclick = () => openBook(book.name, book.imgUrl);
+            container.appendChild(btn);
+        }
+    });
 }
 
-function renderExtraBooks() {
-    const container = document.getElementById('extraBooks');
-    if (extraBooks.length > 0) {
-        container.innerHTML = `
-            <h2 class="section-title">Добавленные материалы</h2>
-            <div class="subjects-grid">
-                ${extraBooks.map(book => `
-                    <div class="subject-card extra-card" onclick="showExtra('${book.name}', '${book.imgUrl}')">
-                        <div class="card-header">
-                            <div class="icon-box" style="background:#e0f2fe; color:var(--primary);"><i class='bx bx-book-bookmark'></i></div>
-                            <h3>${book.name}</h3>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    } else container.innerHTML = '';
+function renderAdminList() {
+    const list = document.getElementById('bookList');
+    if(list) {
+        list.innerHTML = extraBooks.map(book => `
+            <li><span>${book.name} (${book.subject})</span><button class="del-btn" onclick="deleteBook(${book.id})"><i class='bx bx-trash'></i></button></li>
+        `).join('');
+    }
 }
 
 window.deleteBook = (id) => {
     extraBooks = extraBooks.filter(b => b.id !== id);
     localStorage.setItem('addedBooks', JSON.stringify(extraBooks));
-    renderAdminList(); renderExtraBooks();
+    renderAdminList();
+    renderInPlace();
+    updateStats();
 };
 
-window.showExtra = (name, url) => {
-    const viewer = document.getElementById('book-display');
-    document.getElementById('book-image').src = url;
-    document.getElementById('current-class-title').textContent = name;
-    viewer.style.display = 'block';
-    viewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-};
-
-// Закрытие
 document.querySelectorAll('.close-modal, .close-test, .close-admin').forEach(btn => {
     btn.onclick = () => {
         loginModal.style.display = 'none';
@@ -176,4 +179,6 @@ document.querySelectorAll('.close-modal, .close-test, .close-admin').forEach(btn
     }
 });
 
-renderExtraBooks();
+// Запуск
+renderInPlace();
+updateStats();
