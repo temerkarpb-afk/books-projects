@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLib — Твоя цифровая библиотека</title>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<header class="main-header">
+    <div class="container header-flex">
+        <div class="logo">
+            <img src="./img1.webp" alt="logo">
+            <span>Edu<span>Lib</span></span>
+        </div>
+        
+        <div class="header-search">
+            <i class='bx bx-search'></i>
+            <input type="text" id="searchInput" placeholder="Поиск учебника...">
+        </div>
+
+        <div class="header-btns">
+            <button id="loginTrigger" class="btn-auth"><i class='bx bx-user-circle'></i> <span>Войти</span></button>
+            <button id="adminBurger" class="btn-admin-icon"><i class='bx bx-cog'></i></button>
+        </div>
+    </div>
+</header>
+
+<section class="hero-banner">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Твой путь к знаниям начинается здесь</h1>
+            <p>Интерактивные учебники и экспресс-тесты для эффективной подготовки к урокам.</p>
+            <button id="openTestModal" class="btn-primary-lg">Пройти проверку знаний</button>
+        </div>
+    </div>
+</section>
+
+<main class="container">
+    <h2 class="section-title">Каталог учебников</h2>
+    <div class="subjects-grid">
+        <div class="subject-card">
+            <div class="card-badge">Базовый уровень</div>
+            <div class="card-header math">
+                <div class="icon-box"><i class='bx bx-calculator'></i></div>
+                <h3>Математика</h3>
+            </div>
+            <div class="class-selector">
+                <button id="math-1" data-class="Математика 1 класс">1</button>
+                <button id="math-2" data-class="Математика 2 класс">2</button>
+                <button id="math-3" data-class="Математика 3 класс">3</button>
+                <button id="math-4" data-class="Математика 4 класс">4</button>
+                <button id="math-5" data-class="Математика 5 класс">5</button>
+                <button id="math-6" data-class="Математика 6 класс">6</button>
+                <button id="math-7" data-class="Математика 7 класс">7</button>
+                <button id="math-8" data-class="Математика 8 класс">8</button>
+                <button id="math-9" data-class="Математика 9 класс">9</button>
+                <button id="math-10" data-class="Математика 10 класс">10</button>
+                <button id="math-11" data-class="Математика 11 класс">11</button>
+            </div>
+        </div>
+
+        <div class="subject-card">
+            <div class="card-badge">Базовый уровень</div>
+            <div class="card-header rus">
+                <div class="icon-box"><i class='bx bx-font-family'></i></div>
+                <h3>Русский язык</h3>
+            </div>
+            <div class="class-selector">
+                <button id="rus-1" data-class="Русский язык 1 класс">1</button>
+                <button id="rus-2" data-class="Русский язык 2 класс">2</button>
+                <button id="rus-3" data-class="Русский язык 3 класс">3</button>
+                <button id="rus-4" data-class="Русский язык 4 класс">4</button>
+                <button id="rus-5" data-class="Русский язык 5 класс">5</button>
+                <button id="rus-6" data-class="Русский язык 6 класс">6</button>
+                <button id="rus-7" data-class="Русский язык 7 класс">7</button>
+                <button id="rus-8" data-class="Русский язык 8 класс">8</button>
+                <button id="rus-9" data-class="Русский язык 9 класс">9</button>
+                <button id="rus-10" data-class="Русский язык 10 класс">10</button>
+                <button id="rus-11" data-class="Русский язык 11 класс">11</button>
+            </div>
+        </div>
+
+        <div class="subject-card">
+            <div class="card-badge">Базовый уровень</div>
+            <div class="card-header eng">
+                <div class="icon-box"><i class='bx bx-globe'></i></div>
+                <h3>Английский язык</h3>
+            </div>
+            <div class="class-selector">
+                <button id="eng-1" data-class="Английский язык 1 класс">1</button>
+                <button id="eng-2" data-class="Английский язык 2 класс">2</button>
+                <button id="eng-3" data-class="Английский язык 3 класс">3</button>
+                <button id="eng-4" data-class="Английский язык 4 класс">4</button>
+                <button id="eng-5" data-class="Английский язык 5 класс">5</button>
+                <button id="eng-6" data-class="Английский язык 6 класс">6</button>
+                <button id="eng-7" data-class="Английский язык 7 класс">7</button>
+                <button id="eng-8" data-class="Английский язык 8 класс">8</button>
+                <button id="eng-9" data-class="Английский язык 9 класс">9</button>
+                <button id="eng-10" data-class="Английский язык 10 класс">10</button>
+                <button id="eng-11" data-class="Английский язык 11 класс">11</button>
+            </div>
+        </div>
+    </div>
+
+    <section id="book-display" class="book-viewer">
+        <div class="viewer-card">
+            <div class="viewer-header">
+                <span class="status-dot"></span>
+                <h2 id="current-class-title">Просмотр учебника</h2>
+            </div>
+            <div class="img-frame">
+                <img src="" id="book-image" alt="Обложка">
+            </div>
+        </div>
+    </section>
+
+    <div id="extraBooks" class="extra-books-container"></div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="./img1.webp" alt="logo">
+                    <span>Edu<span>Lib</span></span>
+                </div>
+                <p>Ваш надежный цифровой проводник в мире школьного образования. Все материалы проверены и актуальны для 2026 учебного года.</p>
+                <div class="socials">
+                    <a href="#"><i class='bx bxl-vk'></i></a>
+                    <a href="#"><i class='bx bxl-telegram'></i></a>
+                    <a href="#"><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+            <div class="footer-nav">
+                <h4>Навигация</h4>
+                <ul>
+                    <li><a href="#"><i class='bx bx-chevron-right'></i> Каталог книг</a></li>
+                    <li><a href="#"><i class='bx bx-chevron-right'></i> Онлайн тесты</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Поддержка</h4>
+                <p><i class='bx bx-envelope'></i> support@edulib.ru</p>
+                <p><i class='bx bx-phone'></i> +7 (800) 555-35-35</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content auth-card">
+        <button class="close-modal"><i class='bx bx-x'></i></button>
+        <div class="auth-icon"><i class='bx bxs-user-badge'></i></div>
+        <h2>Админ-доступ</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <i class='bx bx-user'></i>
+                <input type="text" id="username" placeholder="Логин (admin)" required>
+            </div>
+            <div class="input-group">
+                <i class='bx bx-key'></i>
+                <input type="password" id="password" placeholder="Пароль (123)" required>
+            </div>
+            <p id="errorMessage" class="error-txt"></p>
+            <button type="submit" class="btn-submit">Войти в панель</button>
+        </form>
+    </div>
+</div>
+
+<div id="testModal" class="modal">
+    <div class="modal-content test-modal-box">
+        <div class="test-header">
+            <div>
+                <h2>Экспресс-тест</h2>
+                <p>Проверь свои знания за 2 минуты</p>
+            </div>
+            <button class="close-test"><i class='bx bx-x'></i></button>
+        </div>
+        <div id="testContainer"></div>
+        <button id="submitTest" class="btn-test-done">Завершить тест</button>
+    </div>
+</div>
+
+<div id="adminPanel" class="side-admin">
+    <div class="admin-header">
+        <div class="admin-title">
+            <i class='bx bxs-dashboard'></i>
+            <h3>Управление</h3>
+        </div>
+        <button class="close-admin"><i class='bx bx-chevron-right'></i></button>
+    </div>
+    <div class="admin-body">
+        <div class="admin-section">
+            <h4>Новый ресурс</h4>
+            <div class="admin-form">
+                <input type="text" id="bookName" placeholder="Название (н-р: Биология 5 класс)">
+                <input type="text" id="bookImg" placeholder="Ссылка на изображение">
+                <button id="addBookBtn"><i class='bx bx-plus'></i> Опубликовать</button>
+            </div>
+        </div>
+        <div class="admin-section">
+            <h4>Список ваших книг</h4>
+            <ul id="bookList" class="admin-book-list"></ul>
+        </div>
+    </div>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>
