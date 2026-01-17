@@ -6,7 +6,9 @@
     --bg: #f8fafc;
     --text: #334155;
     --error: #ef4444;
-    --radius: 20px;
+    --radius-lg: 30px;
+    --radius-md: 16px;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* --- ОБНУЛЕНИЕ --- */
@@ -14,7 +16,7 @@
 body { background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-/* --- HEADER (ИСПРАВЛЕНО) --- */
+/* --- HEADER --- */
 .main-header { 
     background: var(--white); 
     padding: 15px 0; 
@@ -38,7 +40,6 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     font-size: 24px; 
     color: var(--dark); 
     text-decoration: none; 
-    flex-shrink: 0;
 }
 .logo img { height: 40px; margin-right: 12px; }
 .logo span span { color: var(--primary); }
@@ -58,10 +59,8 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     display: flex; 
     align-items: center; 
     gap: 12px; 
-    flex-shrink: 0; 
 }
 
-/* КНОПКА ВОЙТИ */
 .btn-auth { 
     background: var(--primary); 
     color: white !important; 
@@ -74,11 +73,8 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     align-items: center; 
     gap: 8px; 
     transition: 0.3s;
-    white-space: nowrap;
 }
-.btn-auth:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
-/* ИКОНКА АДМИНКИ */
 .btn-admin-icon { 
     background: #f1f5f9; 
     border: none; 
@@ -88,11 +84,8 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     font-size: 22px; 
     color: #64748b; 
     display: flex;
-    align-items: center;
-    justify-content: center;
     transition: 0.3s;
 }
-.btn-admin-icon:hover { background: #e2e8f0; color: var(--dark); }
 
 /* --- HERO --- */
 .hero-banner { 
@@ -116,10 +109,8 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
     margin-top: 25px; 
     transition: 0.3s;
 }
-.btn-primary-lg:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3); }
 
-/* --- GRID & CARDS --- */
-.section-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; color: var(--dark); }
+/* --- КАРТОЧКИ --- */
 .subjects-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
@@ -128,87 +119,217 @@ body { background: var(--bg); color: var(--text); overflow-x: hidden; line-heigh
 }
 .subject-card { 
     background: white; 
-    border-radius: var(--radius); 
+    border-radius: var(--radius-md); 
     padding: 30px; 
     border: 1px solid #e2e8f0; 
     position: relative; 
     transition: 0.3s;
 }
-.subject-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-
-.card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-.icon-box { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-.math .icon-box { background: #dcfce7; color: #16a34a; }
-.rus .icon-box { background: #fee2e2; color: #dc2626; }
-.eng .icon-box { background: #e0f2fe; color: #0284c7; }
+.subject-card:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
 
 .class-selector { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .class-selector button { border: 1px solid #f1f5f9; background: #f8fafc; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; }
 .class-selector button:hover { background: var(--primary); color: white; }
 
-/* --- ТЕСТИРОВАНИЕ (ИСПРАВЛЕНО) --- */
-.test-modal-box { max-width: 650px !important; width: 95%; padding: 0 !important; overflow: hidden; }
-.test-header { background: #f8fafc; padding: 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-#testContainer { padding: 30px; max-height: 450px; overflow-y: auto; }
-.test-item { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left; }
-.btn-test-done { 
-    width: calc(100% - 60px); 
-    margin: 0 30px 30px; 
-    padding: 18px; 
-    background: var(--primary); 
+/* --- МОДАЛЬНЫЕ ОКНА (АВТОРИЗАЦИЯ И ТЕСТ) --- */
+.modal { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(15, 23, 42, 0.75); 
+    backdrop-filter: blur(10px); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 2000; 
+    padding: 20px; 
+}
+
+/* Дизайн контента модалок */
+.modal-content { 
+    background: white; 
+    border-radius: var(--radius-lg); 
+    position: relative; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Внутрянка авторизации */
+.auth-card { 
+    max-width: 420px; 
+    width: 100%;
+    padding: 50px 40px; 
+    text-align: center; 
+}
+.auth-icon { 
+    font-size: 70px; 
+    color: var(--primary); 
+    margin-bottom: 25px; 
+    background: #eef2ff;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+.auth-card h2 { font-size: 24px; font-weight: 800; color: var(--dark); margin-bottom: 30px; }
+
+/* Инпуты в модалках */
+.input-group { position: relative; margin-bottom: 18px; text-align: left; }
+.input-group i { position: absolute; left: 18px; top: 16px; color: #94a3b8; font-size: 18px; }
+.input-group input { 
+    width: 100%; 
+    padding: 15px 15px 15px 50px; 
+    border-radius: 14px; 
+    border: 1px solid #e2e8f0; 
+    outline: none; 
+    font-size: 15px;
+    transition: 0.3s;
+    background: #f8fafc;
+}
+.input-group input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+
+.btn-submit { 
+    width: 100%; 
+    padding: 16px; 
+    background: var(--dark); 
     color: white; 
     border: none; 
     border-radius: 14px; 
     font-weight: 700; 
     cursor: pointer; 
+    margin-top: 10px; 
     font-size: 16px;
+    transition: 0.3s;
 }
+.btn-submit:hover { background: #000; transform: translateY(-2px); }
 
-/* --- АДМИН ПАНЕЛЬ (ИСПРАВЛЕНО) --- */
+/* Внутрянка теста */
+.test-modal-box { max-width: 700px !important; width: 100%; }
+.test-header { 
+    background: #f8fafc; 
+    padding: 30px 40px; 
+    border-bottom: 1px solid #e2e8f0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.test-header h2 { font-weight: 800; font-size: 22px; color: var(--dark); }
+
+#testContainer { padding: 40px; max-height: 500px; overflow-y: auto; }
+.test-item { 
+    background: #fff; 
+    border: 2px solid #f1f5f9; 
+    border-radius: 20px; 
+    padding: 25px; 
+    margin-bottom: 20px; 
+}
+.test-item p { font-weight: 700; font-size: 17px; margin-bottom: 15px; color: var(--dark); }
+
+/* --- АДМИН ПАНЕЛЬ (БУРГЕР/SIDEBAR) --- */
 .side-admin { 
     position: fixed; 
-    right: -420px; 
+    right: -450px; 
     top: 0; 
-    width: 380px; 
+    width: 400px; 
     height: 100%; 
     background: white; 
-    box-shadow: -10px 0 30px rgba(0,0,0,0.1); 
+    box-shadow: -15px 0 35px rgba(0,0,0,0.1); 
     z-index: 2001; 
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+    display: flex;
+    flex-direction: column;
 }
 .side-admin.active { right: 0; }
-.admin-header { padding: 30px; background: var(--dark); color: white; display: flex; justify-content: space-between; align-items: center; }
-.admin-body { padding: 30px; }
-.admin-form input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none; }
-#addBookBtn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-/* --- МОДАЛЬНЫЕ ОКНА --- */
-.modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-.modal-content { background: white; border-radius: 30px; position: relative; }
-.auth-card { max-width: 400px; padding: 40px; text-align: center; }
-.auth-icon { font-size: 60px; color: var(--primary); margin-bottom: 20px; }
-.btn-submit { width: 100%; padding: 14px; background: var(--dark); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+.admin-header { 
+    padding: 35px 30px; 
+    background: var(--dark); 
+    color: white; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.admin-header h3 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+.admin-body { padding: 30px; overflow-y: auto; flex-grow: 1; }
+.admin-section h4 { 
+    font-size: 12px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: #94a3b8; 
+    margin-bottom: 20px; 
+}
+
+.admin-form input { 
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 12px; 
+    border: 1px solid #e2e8f0; 
+    margin-bottom: 15px; 
+    outline: none; 
+    background: #f8fafc;
+}
+#addBookBtn { 
+    width: 100%; 
+    padding: 15px; 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.3s;
+}
+#addBookBtn:hover { background: var(--primary-hover); }
+
+/* Список книг в админке */
+.admin-book-list { margin-top: 30px; list-style: none; }
+.admin-book-list li { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px; 
+    background: #f1f5f9; 
+    border-radius: 12px; 
+    margin-bottom: 10px; 
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* --- ЗАКРЫВАЮЩИЕ КНОПКИ --- */
+.close-modal, .close-test, .close-admin { 
+    background: #f1f5f9; 
+    border: none; 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    font-size: 24px; 
+    color: #64748b; 
+    transition: 0.3s;
+}
+.close-modal:hover, .close-test:hover { background: var(--error); color: white; }
 
 /* --- FOOTER --- */
 .main-footer { background: #0f172a; color: #94a3b8; padding: 80px 0 40px; border-top: 4px solid var(--primary); margin-top: 80px; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; }
 
 /* --- АДАПТИВНОСТЬ --- */
-@media (max-width: 992px) {
-    .header-search { max-width: 250px; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
 @media (max-width: 768px) {
-    .header-flex { flex-direction: column; gap: 15px; }
+    .header-flex { flex-direction: column; }
     .header-search { max-width: 100%; width: 100%; }
     .header-btns { width: 100%; justify-content: center; }
-    .btn-auth { flex-grow: 1; justify-content: center; }
-    .hero-banner h1 { font-size: 28px; }
-    .footer-grid { grid-template-columns: 1fr; text-align: center; }
     .side-admin { width: 100%; right: -100%; }
-}
-
-@media (max-width: 480px) {
-    .class-selector { grid-template-columns: repeat(4, 1fr); }
+    .auth-card { padding: 40px 20px; }
+    .test-header { padding: 20px; }
+    #testContainer { padding: 20px; }
 }
